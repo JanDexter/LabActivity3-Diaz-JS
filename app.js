@@ -14,9 +14,36 @@ function render() {
     tasks.forEach(t => {
       const card = document.createElement("div");
       card.className = "card";
-      card.innerHTML = `<h3>${t.title.replace(/</g,"&lt;")}</h3><div class="card-actions">${
-        STATUSES.filter(x => x !== t.status).map(x => `<button data-action="move" data-id="${t.id}" data-status="${x}">→ ${x[0].toUpperCase()+x.slice(1)}</button>`).join("")
-      }<button data-action="edit" data-id="${t.id}">Edit</button><button data-action="delete" data-id="${t.id}">Delete</button></div>`;
+
+      const h3 = document.createElement("h3");
+      h3.textContent = t.title;
+      card.appendChild(h3);
+
+      const actions = document.createElement("div");
+      actions.className = "card-actions";
+
+      STATUSES.filter(x => x !== t.status).forEach(x => {
+        const btn = document.createElement("button");
+        btn.dataset.action = "move";
+        btn.dataset.id = t.id;
+        btn.dataset.status = x;
+        btn.textContent = `→ ${x[0].toUpperCase() + x.slice(1)}`;
+        actions.appendChild(btn);
+      });
+
+      const editBtn = document.createElement("button");
+      editBtn.dataset.action = "edit";
+      editBtn.dataset.id = t.id;
+      editBtn.textContent = "Edit";
+      actions.appendChild(editBtn);
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.dataset.action = "delete";
+      deleteBtn.dataset.id = t.id;
+      deleteBtn.textContent = "Delete";
+      actions.appendChild(deleteBtn);
+
+      card.appendChild(actions);
       col.appendChild(card);
     });
     document.querySelector(`[data-count="${s}"]`).textContent = tasks.length;
